@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Map from '../components/map';
+import Board from '../components/board';
 
 function Ingame () {
   return (
     <>
       <h3>Ingame</h3>
-      <Map />
+      <Board />
     </>
   );
 }
