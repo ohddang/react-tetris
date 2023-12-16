@@ -19,7 +19,7 @@ function UsePlayer(){
     site_x : START_X, 
     site_y : START_Y,
   });
-  console.log("update Player");
+  console.log(`Player ${time}`);
   //
   // [timer] 의존성
   //
