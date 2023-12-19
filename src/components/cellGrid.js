@@ -1,11 +1,15 @@
+import "../CSS/ingame.css"
+
 import { useEffect } from 'react';
 import Cell from './cell.js'
 import UsePlayer from '../hooks/player.js';
 
 export function CellGrid({ cellType, setCellType }) {
-  console.log("Draw CellGrid");
   const [playerState, setPlayerState] = UsePlayer();
 
+  const NONE = 0; // TODO : move const.js
+  const BLOCK = 1; // TODO : move const.js
+  const PLAYER = 2; // TODO : move const.js
   //
   // useEffect로 playerState 감지
   //
@@ -15,19 +19,27 @@ export function CellGrid({ cellType, setCellType }) {
 
       console.log(`${row} ${col} ${type}`)
 
-      if(row == undefined || col == undefined) // TODO : check why undefined
-        return [...prevCellType];              //
+      if (row == undefined || col == undefined) // TODO : check why undefined
+        return [...prevCellType];
 
-      const newCellType = [...prevCellType];
-      newCellType[row] = [...prevCellType[row]];
-      newCellType[row][col] = type;
-      return newCellType;
+      try {
+        // new
+        const newCellType = [...prevCellType];
+        newCellType[row] = [...prevCellType[row]];
+        newCellType[row][col] = type;
+
+        // reset
+        newCellType[row][col + 1] = NONE;
+
+        return newCellType;
+      } catch (e) {
+        console.error(e);
+      }
     });
   };
 
-  const playerType = 2;
   useEffect(() => {
-    updateElement(playerState.site_x, playerState.site_y, playerType); // TODO : cellType:2(player) -> const, context or enum
+    updateElement(playerState.site_x, playerState.site_y, PLAYER); // TODO : cellType:2(player) -> const, context or enum
   }, [playerState]);
 
 
@@ -44,7 +56,9 @@ export function CellGrid({ cellType, setCellType }) {
 
   return (
     <>
-      {makeGrid()}
+      <div className="cellGrid">
+        {makeGrid()}
+      </div>
     </>
   );
 }

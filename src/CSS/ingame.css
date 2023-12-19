@@ -1,23 +1,51 @@
+.ingame{
+  width:100%;
+  
+  background-color: #9caa84;
+  text-align: center;  
+}
 .board{
-  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width:100%;
+  height: auto;
+
+  background-color: #9caa84;
+  object-fit: fill;
+
+  padding: 50px;
+}
+
+.cellGrid{
+  width: 50%;
   height: 600px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(20, 1fr);
-  gap: 1px;
-  margin-left: 50px;
+  /* place-items: center; */
 
-  background-color:black;
+  gap: 1px;
+  margin-left: 0px;
+
+  /* background-color:black; */
 }
 
 .none{
+  display: grid;
+  place-items: center;
   background-color:lightblue;
 }
 
 .block{
+  display: grid;
+  place-items: center;
   background-color:indianred;
 }
 
 .my{
+  display: grid;
+  place-items: center;
   background-color:yellowgreen;
 }

@@ -2,7 +2,6 @@
 // TODO : type -> enum, const or context
 //
 function Cell({ type, id }) {
-  // console.log("Draw Cell");
   let cell = [];
 
   if (type === 1)

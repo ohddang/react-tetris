@@ -10,7 +10,7 @@ function Ingame () {
 
   return (
     <TimerContext.Provider value={time}>
-        <h3>Ingame</h3>
+        {/* <h3>Tetris</h3> */}
         <Board />
     </TimerContext.Provider>
   );
