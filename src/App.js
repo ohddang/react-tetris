@@ -1,5 +1,3 @@
-import './App.css';
-
 import Ingame from './pages/ingame'
 
 function App() {
