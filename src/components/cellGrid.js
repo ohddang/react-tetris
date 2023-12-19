@@ -1,7 +1,7 @@
 import "../CSS/ingame.css"
 
 import { useEffect } from 'react';
-import Cell from './cell.js'
+import Cell from './Cell.js'
 import UsePlayer from '../hooks/player.js';
 
 export function CellGrid({ cellType, setCellType }) {
