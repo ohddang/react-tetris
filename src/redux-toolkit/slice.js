@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import GLOBAL from '../const.js'
 
-const timeInitValue = { value: 0};
+const timeInitValue = { value: 0 };
 
 export const timeSlice = createSlice({
   name: "time",
@@ -12,24 +13,18 @@ export const timeSlice = createSlice({
   }  
 });
 
-const gridInitValue = { };
+const gridInitValue = { value : new Array(10).fill(0).map(() => new Array(20).fill(GLOBAL.GRID_NONE)) };
 
 export const gridSlice = createSlice({
   name: "grid",
   initialState: gridInitValue,
   reducers:{
-    // player현재 위치 정보 및 시간에 따라 내려가는 state 관리
-    playerTimeMove: (state, action) => {
-      // y축으로 내려감
+    // 새로운 플레이어 위치를 전달받아서 새로운 그리드 정보를 업데이트
+    updateGrid: (state, action) => {
       state.value = action.payload;
-    },
-
-    // player현재 위치 정보 및 키 입력에 따라 움직이는 state
-    playerKeyMove: (state, action) => {
-      state.value = action.playload;
     }
   }
 });
 
 export const { updateTime } = timeSlice.actions;
-export const { playerTimeMove, playerKeyMove } = gridSlice.actions;
+export const { updateGrid } = gridSlice.actions;

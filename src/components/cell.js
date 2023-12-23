@@ -1,15 +1,18 @@
+
+import GLOBAL from '../const.js'
+
 //
 // TODO : type -> enum, const or context
 //
 function Cell({ type, id }) {
   let cell = [];
 
-  if (type === 1)
-    cell.push(<div className='block' key={id}></div>);
-  if (type === 0)
-    cell.push(<div className='none' key={id}></div>);
-  if (type === 2)
-    cell.push(<div className='my' key={id}></div>);
+  if (type === GLOBAL.GRID_NONE)
+    cell.push(<div class='none' key={id}></div>);
+  if (type === GLOBAL.GRID_BLOCK)
+    cell.push(<div class='block' key={id}></div>);
+  if (type === GLOBAL.GRID_PLAYER)
+    cell.push(<div class='my' key={id}></div>);
 
   return cell;
 }

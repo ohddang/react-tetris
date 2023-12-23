@@ -1,52 +1,18 @@
 import "../CSS/ingame.css"
 
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Cell from './Cell.js'
-import UsePlayer from '../hooks/player.js';
+import UsePlayer from '../hooks/player.js'
 
-export function CellGrid({ cellType, setCellType }) {
-  const [playerState, setPlayerState] = UsePlayer();
+export function CellGrid() {
+  const [site, setState] = UsePlayer();
+  const grid = useSelector((state) => state.grid.value);
 
-  const NONE = 0; // TODO : move const.js
-  const BLOCK = 1; // TODO : move const.js
-  const PLAYER = 2; // TODO : move const.js
-  //
-  // useEffect로 playerState 감지
-  //
-  const updateElement = (row, col, type) => {
-    setCellType(prevCellType => {
-      // 이중 배열의 불변성을 유지하며 특정 요소 업데이트
-
-      if (row == undefined || col == undefined) // TODO : check why undefined
-        return [...prevCellType];
-
-      try {
-        // new
-        const newCellType = [...prevCellType];
-        newCellType[row] = [...prevCellType[row]];
-        newCellType[row][col] = type;
-
-        // reset
-        newCellType[row][col + 1] = NONE;
-
-        return newCellType;
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  };
-
-  useEffect(() => {
-    updateElement(playerState.site_x, playerState.site_y, PLAYER); // TODO : cellType:2(player) -> const, context or enum
-  }, [playerState]);
-
-
-  // draw
   function makeGrid() {
     let items = [];
     for (let y = 19; y >= 0; --y) {
       for (let x = 9; x >= 0; --x) {
-        items.push(<Cell type={cellType[x][y]} id={x * 100 + y} />);
+        items.push(<Cell type={grid[x][y]} id={x + y*20} />);
       }
     }
     return items;
@@ -54,7 +20,7 @@ export function CellGrid({ cellType, setCellType }) {
 
   return (
     <>
-      <div className="cellGrid">
+      <div class="cellGrid">
         {makeGrid()}
       </div>
     </>
