@@ -17,8 +17,6 @@ export function CellGrid({ cellType, setCellType }) {
     setCellType(prevCellType => {
       // 이중 배열의 불변성을 유지하며 특정 요소 업데이트
 
-      console.log(`${row} ${col} ${type}`)
-
       if (row == undefined || col == undefined) // TODO : check why undefined
         return [...prevCellType];
 

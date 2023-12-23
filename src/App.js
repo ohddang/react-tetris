@@ -1,5 +1,7 @@
 import Ingame from './pages/ingame'
 import styled from 'styled-components'
+import store from './redux-toolkit/store';
+import { Provider } from 'react-redux';
 
 const StyledIngame = styled(Ingame)`
   width:100%;
@@ -11,7 +13,9 @@ const StyledIngame = styled(Ingame)`
 
 function App() {
   return (
-    <StyledIngame />
+    <Provider store={store}>
+      <StyledIngame />
+    </Provider>    
   );
 }
 

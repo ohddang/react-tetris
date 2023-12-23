@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useReducer } from 'react';
 import { UseTimer } from './timer';
 import { TimerContext } from '../context/timerContext';
+import { useSelector } from 'react-redux';
 
 // 3x3 블럭 모양 랜덤 생성 최대 5개의 셀로 구성 중심점 기준으로 genblock 구현
 // 90도 돌때마다 규칙이 있음 규칙에 따라서 정하고
@@ -11,24 +12,24 @@ import { TimerContext } from '../context/timerContext';
 const START_X = 5; // context로 빼자
 const START_Y = 19;
 
-function UsePlayer(){
+const playerState = {
+  site_x : START_X,
+  site_y : START_Y,
+}
 
-  // const [time, setTimer] = UseTimer(0);
-  const time = useContext(TimerContext);
+function UsePlayer(){
+  const time = useSelector( (state) => state.time.value )
+
   const [state, setState] = useState({
     site_x : START_X, 
     site_y : START_Y,
   });
-  console.log(`Player ${time}`);
-  //
-  // [timer] 의존성
-  //
+  
   useEffect(()=> { 
     const newSite_x = state.site_x;
     const newSite_y = state.site_y < 0 ? START_Y : state.site_y - 1;
     // TODO : update player site
     // add isArrived Flag and check
-    console.log(`[${time}] x : ${newSite_x}  y : ${newSite_y}`);
 
     if(state.site_x != newSite_x || state.site_y != newSite_y)
       setState({ site_x: newSite_x, site_y: newSite_y}); }, 

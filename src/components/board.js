@@ -9,10 +9,7 @@ import CellGrid from './cellGrid.js'
 function Board() {
   const initArray = Array.from({ length: 10 }, () => Array.from({ length: 20 }, () => 1));
   const [cellType, setCellType] = useState(initArray);
-  console.log(initArray);
-
-
-  console.log("Draw Board");
+  // console.log(initArray);
 
   // context api : time
   return (
