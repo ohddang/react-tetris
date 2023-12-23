@@ -12,7 +12,7 @@ export const timeSlice = createSlice({
   }  
 });
 
-const gridInitValue = "";
+const gridInitValue = { };
 
 export const gridSlice = createSlice({
   name: "grid",
