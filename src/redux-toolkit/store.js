@@ -1,10 +1,10 @@
-import React from 'react'
-import {configureStore} from '@reduxjs/toolkit'
-import { gridSlice, timeSlice } from './slice';
+import React from "react";
+import { configureStore } from "@reduxjs/toolkit";
+import { gridSlice, timeSlice, playerSlice } from "./slice";
 
 export default configureStore({
-  reducer:{
+  reducer: {
     time: timeSlice.reducer,
     grid: gridSlice.reducer,
-  }
+  },
 });
