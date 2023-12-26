@@ -35,7 +35,7 @@
 
 .block{
   display: grid;
-  background: url('../../assets/empty.png');
+  background: url('../../assets/fill.png');
   background-size: cover;
 }
 

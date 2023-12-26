@@ -1,18 +1,12 @@
 import React from 'react';
-
 import Board from '../components/board';
-import { TimerContext } from '../context/timerContext';
 import { UseTimer } from '../hooks/timer';
 
 function Ingame () {
-  const [time, setTime] = UseTimer();
-  console.log("draw Ingame");
+  const time = UseTimer(); // TODO : 타이머 어떤 컴포넌트에서 사용해야할까..
 
   return (
-    <TimerContext.Provider value={time}>
-        {/* <h3>Tetris</h3> */}
-        <Board />
-    </TimerContext.Provider>
+      <Board />
   );
 }
 
