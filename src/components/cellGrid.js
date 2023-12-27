@@ -1,7 +1,7 @@
 import "../CSS/ingame.css";
 
 import { useSelector } from "react-redux";
-import Cell from "./Cell.js";
+import Cell from "./cell.js";
 import UsePlayer from "../hooks/player.js";
 import GLOBAL from "../const.js";
 

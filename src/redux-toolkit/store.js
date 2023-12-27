@@ -1,6 +1,6 @@
 import React from "react";
 import { configureStore } from "@reduxjs/toolkit";
-import { gridSlice, timeSlice, playerSlice } from "./slice";
+import { gridSlice, timeSlice } from "./slice";
 
 export default configureStore({
   reducer: {
