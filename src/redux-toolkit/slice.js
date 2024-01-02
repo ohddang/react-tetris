@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import COMMON from "../const.js";
-import { cloneDeep } from "lodash";
 
 const timeInitValue = { value: 0 };
 
