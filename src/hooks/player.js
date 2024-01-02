@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { updateGrid } from "../redux-toolkit/slice";
-import GLOBAL, { PLAYER_ARRIVED } from "../const.js";
-import { cloneDeep } from "lodash";
+import { updateGrid, updateGridFromPlayer } from "../redux-toolkit/slice";
+import COMMON, { PLAYER_ARRIVED } from "../const.js";
+import { cloneDeep, result } from "lodash"; // web browser 함수로 수정 뭐였지..
 
 // 3x3 블럭 모양 랜덤 생성 최대 5개의 셀로 구성 중심점 기준으로 genblock 구현
 // 90도 돌때마다 규칙이 있음 규칙에 따라서 정하고
@@ -11,64 +11,92 @@ import { cloneDeep } from "lodash";
 // 타이머는 하나의 훅으로 구현해서 이곳저곳에서 사용? 아니면 어떻게 쓸지 생각해보기
 // myBlock 객체는 중심점 좌표 있어야할듯 초기값으로 중심점좌표 주고 도형데이터(상대좌표) 적용하여 에서 처리
 
-function UsePlayer() {
+function usePlayer() {
   const time = useSelector((state) => state.time.value);
   const grid = useSelector((state) => state.grid.value);
   const dispatch = useDispatch();
 
   const [position, setPosition] = useState({
-    x: GLOBAL.START_X,
-    y: GLOBAL.START_Y,
+    x: COMMON.START_X,
+    y: COMMON.START_Y,
   });
-  const [playerState, setPlayerState] = useState(GLOBAL.PLAYER_MOVE);
+  const [playerState, setPlayerState] = useState(COMMON.PLAYER_MOVE);
+  const [area, setArea] = useState([
+    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 1, y: 0 },
+  ]); // [{x,y},{x,y},{x,y}
 
-  function isPossibleMove(input_x, input_y) {
+  const playerInfo = {
+    position: { ...position },
+    area: { ...area },
+    playerState: playerState,
+  };
+
+  function calculatePlayerArea(input_x, input_y) {
     const prevPosition = { ...position };
     const new_x = prevPosition.x + input_x;
     const new_y = prevPosition.y + input_y;
 
-    if (GLOBAL.PLAYER_CREATE == playerState) {
-      setPlayerState(GLOBAL.PLAYER_MOVE);
-      setPosition({ x: GLOBAL.START_X, y: GLOBAL.START_Y });
+    if (input_x !== 0) {
+      for (const site of [{ x: 0, y: 0 }, ...area]) {
+        const calc_x = site.x + new_x;
+        const calc_y = site.y + new_y;
 
-      let newGrid = cloneDeep(grid);
-      newGrid[GLOBAL.START_X][GLOBAL.START_Y] = GLOBAL.GRID_PLAYER;
-      dispatch(updateGrid(newGrid));
-    } else if (GLOBAL.PLAYER_ARRIVED === playerState) {
-      setPlayerState(GLOBAL.PLAYER_CREATE);
-
-      let newGrid = cloneDeep(grid);
-      newGrid[prevPosition.x][prevPosition.y] = GLOBAL.GRID_NONE;
-      newGrid[new_x][new_y] = GLOBAL.GRID_BLOCK;
-      dispatch(updateGrid(newGrid));
-    } else if (GLOBAL.PLAYER_MOVE === playerState) {
-      if (
-        input_x !== 0 &&
-        (new_x < 0 ||
-          new_x > GLOBAL.MAP_WIDTH - 1 ||
-          GLOBAL.GRID_BLOCK == grid[new_x][new_y])
-      )
-        return false;
-      if (
-        // TODO : game over 처리
-        input_y !== 0 &&
-        (new_y < 0 || GLOBAL.GRID_BLOCK == grid[new_x][new_y])
-      ) {
-        setPlayerState(GLOBAL.PLAYER_ARRIVED);
-        return false;
+        if (
+          calc_x < 0 ||
+          calc_x > COMMON.MAP_WIDTH - 1 ||
+          COMMON.GRID_BLOCK === grid[calc_x][calc_y]
+        )
+          return { result_x: prevPosition.x, result_y: prevPosition.y };
       }
-      setPosition({ x: new_x, y: new_y });
+      return { result_x: new_x, result_y: new_y };
+    } else if (input_y !== 0) {
+      for (const site of [{ x: 0, y: 0 }, ...area]) {
+        const calc_x = site.x + new_x;
+        const calc_y = site.y + new_y;
 
-      let newGrid = cloneDeep(grid);
-      newGrid[prevPosition.x][prevPosition.y] = GLOBAL.GRID_NONE;
-      newGrid[new_x][new_y] = GLOBAL.GRID_PLAYER;
-      dispatch(updateGrid(newGrid));
+        if (calc_y > COMMON.MAP_HEIGHT - 1)
+          return { result_x: new_x, result_y: new_y };
+
+        if (calc_y < 0 || COMMON.GRID_BLOCK === grid[calc_x][calc_y])
+          return { result_x: prevPosition.x, result_y: prevPosition.y };
+      }
+
+      return { result_x: new_x, result_y: new_y };
+    }
+
+    return { result_x: prevPosition.x, result_y: prevPosition.y };
+  }
+
+  function isPossibleMove(input_x, input_y) {
+    playerInfo.position = position;
+    playerInfo.area = area;
+    playerInfo.playerState = playerState;
+
+    if (COMMON.PLAYER_CREATE == playerState) {
+      setPlayerState(COMMON.PLAYER_MOVE);
+
+      dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_ARRIVED === playerState) {
+      setPlayerState(COMMON.PLAYER_CREATE);
+      setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
+
+      dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {
+      /* block disappear fx */
+    } else if (COMMON.PLAYER_MOVE === playerState) {
+      const { result_x, result_y } = calculatePlayerArea(input_x, input_y);
+      if (input_y !== 0 && position.y === result_y) {
+        setPlayerState(COMMON.PLAYER_ARRIVED);
+      }
+      playerInfo.position = { x: result_x, y: result_y };
+      setPosition({ x: result_x, y: result_y });
+
+      dispatch(updateGridFromPlayer(playerInfo));
     }
   }
 
-  // 12.27
-  // 상위 함수에 Position State
-  //
   const onkeydown = (e) => {
     switch (e.key) {
       case "ArrowLeft":
@@ -86,7 +114,7 @@ function UsePlayer() {
   };
 
   useEffect(() => {
-    if (playerState === GLOBAL.PLAYER_MOVE) {
+    if (playerState === COMMON.PLAYER_MOVE) {
       isPossibleMove(0, -1);
     } else {
       isPossibleMove(0, 0);
@@ -104,4 +132,4 @@ function UsePlayer() {
   return [position, setPosition];
 }
 
-export default UsePlayer;
+export default usePlayer;

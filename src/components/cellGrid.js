@@ -2,18 +2,18 @@ import "../CSS/ingame.css";
 
 import { useSelector } from "react-redux";
 import Cell from "./cell.js";
-import UsePlayer from "../hooks/player.js";
-import GLOBAL from "../const.js";
+import usePlayer from "../hooks/player.js";
+import COMMON from "../const.js";
 
 export function CellGrid() {
-  const [position, setPosition] = UsePlayer();
+  const [position, setPosition] = usePlayer();
   const grid = useSelector((state) => state.grid.value);
 
   function makeGrid() {
     let items = [];
-    for (let y = GLOBAL.MAP_HEIGHT - 1; y >= 0; --y) {
-      for (let x = 0; x < GLOBAL.MAP_WIDTH; ++x) {
-        items.push(<Cell type={grid[x][y]} id={x + y * 20} />);
+    for (let y = COMMON.MAP_HEIGHT - 1; y >= 0; --y) {
+      for (let x = 0; x < COMMON.MAP_WIDTH; ++x) {
+        items.push(<Cell type={grid[x][y]} />);
       }
     }
     return items;
@@ -21,7 +21,7 @@ export function CellGrid() {
 
   return (
     <>
-      <div class="cellGrid">{makeGrid()}</div>
+      <ul className="cellGrid">{makeGrid()}</ul>
     </>
   );
 }

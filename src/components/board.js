@@ -1,14 +1,13 @@
-import "../CSS/ingame.css"
+import "../CSS/ingame.css";
 
-import CellGrid from './cellGrid.js'
+import CellGrid from "./cellGrid.js";
 
 function Board() {
-  
   return (
-    <div class='board'>
+    <div className="board">
       <CellGrid />
     </div>
   );
-};
+}
 
 export default Board;

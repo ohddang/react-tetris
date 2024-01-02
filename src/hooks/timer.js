@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { updateTime } from '../redux-toolkit/slice';
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateTime } from "../redux-toolkit/slice";
 
-export function UseTimer(){
+export function useTimer() {
   const [time, setTimer] = useState(0);
   const dispatch = useDispatch();
 
-  dispatch( updateTime(time) );
-
-  useEffect( ()=>{
+  useEffect(() => {
     const timer = setInterval(() => {
-      setTimer(preTime => preTime + 1);  
+      dispatch(updateTime(time));
     }, 1000);
 
-    return () => { clearInterval(timer); }
+    return () => {
+      clearInterval(timer);
+    };
   }, [time]);
 
   return [time, setTimer];
