@@ -1,13 +1,9 @@
-import { useState, useEffect, useContext, useReducer } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { updateGrid, updateGridFromPlayer } from "../redux-toolkit/slice";
-import COMMON, { PLAYER_ARRIVED } from "../const.js";
-import { cloneDeep, result } from "lodash"; // web browser 함수로 수정 뭐였지..
+import { updateGridFromPlayer } from "../redux-toolkit/slice";
+import COMMON from "../const.js";
 
-// 3x3 블럭 모양 랜덤 생성 최대 5개의 셀로 구성 중심점 기준으로 genblock 구현
-// 90도 돌때마다 규칙이 있음 규칙에 따라서 정하고
-// 타이머는 하나의 훅으로 구현해서 이곳저곳에서 사용? 아니면 어떻게 쓸지 생각해보기
 // myBlock 객체는 중심점 좌표 있어야할듯 초기값으로 중심점좌표 주고 도형데이터(상대좌표) 적용하여 에서 처리
 
 function usePlayer() {
@@ -42,6 +38,30 @@ function usePlayer() {
     { x: 1, y: -1 },
     { x: 0, y: -1 },
   ];
+
+  function genBlock() {
+    const block = [];
+    const blockCount = 4;
+
+    block.push({ x: 0, y: 0 });
+    while (block.length < blockCount) {
+      const x = Math.floor(Math.random() * 3) - 1;
+      const y = Math.floor(Math.random() * 3) - 1;
+
+      if (undefined != block.find((site) => site.x === x && site.y === y))
+        continue;
+
+      if (
+        block.filter((site) => {
+          return Math.abs(site.x - x) + Math.abs(site.y - y) === 1;
+        }).length > 0
+      )
+        block.push({ x: x, y: y });
+    }
+    block.shift();
+
+    return block;
+  }
 
   function calculateTranslateArea(input_x, input_y) {
     const prevPosition = { ...position };
@@ -91,6 +111,7 @@ function usePlayer() {
     } else if (COMMON.PLAYER_ARRIVED === playerState) {
       setPlayerState(COMMON.PLAYER_CREATE);
       setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
+      setArea(genBlock());
 
       dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {

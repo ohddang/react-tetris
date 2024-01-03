@@ -21,7 +21,6 @@ export const gridSlice = createSlice({
   name: "grid",
   initialState: gridInitValue,
   reducers: {
-    // 새로운 플레이어 위치를 전달받아서 새로운 그리드 정보를 업데이트
     updateGrid: (state, action) => {
       state.value = action.payload;
     },
@@ -39,8 +38,6 @@ export const gridSlice = createSlice({
         case COMMON.PLAYER_CREATE:
           state.value = [...state.value].map((row, x) =>
             [...row].map((cell, y) => {
-              // if (cell === COMMON.GRID_PLAYER) cell = COMMON.GRID_BLOCK;
-
               for (const site of newArea) {
                 if (x === site.x && y === site.y) {
                   return (cell = COMMON.GRID_PLAYER);
