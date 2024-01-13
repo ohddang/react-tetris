@@ -1,19 +1,23 @@
-import { useMemo } from "react";
 import "../CSS/ingame.css";
+
 import usePlayer from "../hooks/player.js";
 import { useTimer } from "../hooks/timer.js";
 
 import CellGrid from "./cellGrid.js";
 import NextBlock from "./gameInfo/NextBlock.js";
+import COMMON from "../const.js";
 
 // game data component : max, score, nextblock, lv
 const Board = () => {
-  const nextArea = usePlayer();
+  const { nextArea, playerState } = usePlayer();
   const time = useTimer();
 
   return (
     <div className="board">
       <div className="game_board">
+        {COMMON.PLAYER_DIE === playerState && (
+          <div className="game_msg">Game Over</div>
+        )}
         <div className="game_screen">
           <CellGrid />
           <div className="game_info">

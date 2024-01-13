@@ -39,6 +39,17 @@
   gap: 5px;
 }
 
+.game_msg {
+  position: absolute;
+  background-color: #9caa84;
+
+  width: min(33vw, 330px);
+
+  font-family: "Lato", sans-serif;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  text-align: center;
+}
+
 .cellGrid {
   width: min(20vw, 200px);
   height: min(40vw, 400px);

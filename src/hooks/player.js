@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateGridFromPlayer } from "../redux-toolkit/slice";
 import COMMON from "../const.js";
 
-// myBlock 객체는 중심점 좌표 있어야할듯 초기값으로 중심점좌표 주고 도형데이터(상대좌표) 적용하여 에서 처리
-
 const usePlayer = () => {
   const time = useSelector((state) => state.time.value);
   const grid = useSelector((state) => state.grid.value);
@@ -69,6 +67,19 @@ const usePlayer = () => {
     block.shift();
 
     return block;
+  };
+
+  const isGameoverCheck = () => {
+    for (const site of [{ x: 0, y: 0 }, ...area]) {
+      const calc_x = site.x + COMMON.START_X;
+      const calc_y = site.y + COMMON.START_Y;
+
+      if (calc_y > COMMON.MAP_HEIGHT - 1) continue;
+      if (COMMON.GRID_BLOCK === grid[calc_x][calc_y]) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const isPossibleRotate = (area) => {
@@ -135,9 +146,11 @@ const usePlayer = () => {
     playerInfo.playerState = playerState;
 
     if (COMMON.PLAYER_CREATE == playerState) {
-      setPlayerState(COMMON.PLAYER_MOVE_READY);
-
-      dispatch(updateGridFromPlayer(playerInfo));
+      if (isGameoverCheck()) setPlayerState(COMMON.PLAYER_DIE);
+      else {
+        setPlayerState(COMMON.PLAYER_MOVE_READY);
+        dispatch(updateGridFromPlayer(playerInfo));
+      }
     } else if (COMMON.PLAYER_MOVE_READY == playerState) {
       setPlayerState(COMMON.PLAYER_MOVE);
     } else if (COMMON.PLAYER_ARRIVED === playerState) {
@@ -164,6 +177,8 @@ const usePlayer = () => {
       setPosition({ x: result_x, y: result_y });
 
       dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_DIE === playerState) {
+      console.log("game over");
     }
   };
 
@@ -229,7 +244,7 @@ const usePlayer = () => {
     if (playerState === COMMON.PLAYER_MOVE) {
       updatePlayer(0, -1);
     } else {
-      updatePlayer(0, 0);
+      if (playerState !== COMMON.PLAYER_DIE) updatePlayer(0, 0);
     }
   }, [time, playerState]);
 
@@ -246,7 +261,7 @@ const usePlayer = () => {
     setNextArea(genBlock());
   }, []);
 
-  return nextArea;
+  return { nextArea, playerState };
 };
 
 export default usePlayer;
