@@ -48,7 +48,7 @@ export const gridSlice = createSlice({
           );
           break;
         case COMMON.PLAYER_ARRIVED:
-        case COMMON.PLAYER_ARRIVED_DONE:
+          // case COMMON.PLAYER_ARRIVED_DONE:
           state.value = [...state.value].map((row, x) =>
             [...row].map((cell, y) => {
               if (cell === COMMON.GRID_PLAYER) cell = COMMON.GRID_BLOCK;

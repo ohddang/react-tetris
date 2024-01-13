@@ -6,7 +6,7 @@ import COMMON from "../const.js";
 
 // myBlock 객체는 중심점 좌표 있어야할듯 초기값으로 중심점좌표 주고 도형데이터(상대좌표) 적용하여 에서 처리
 
-function usePlayer() {
+const usePlayer = () => {
   const time = useSelector((state) => state.time.value);
   const grid = useSelector((state) => state.grid.value);
   const dispatch = useDispatch();
@@ -15,12 +15,11 @@ function usePlayer() {
     x: COMMON.START_X,
     y: COMMON.START_Y,
   });
-  const [playerState, setPlayerState] = useState(COMMON.PLAYER_MOVE);
-  const [area, setArea] = useState([
-    { x: -1, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 0 },
-  ]); // [{x,y},{x,y},{x,y}
+  const [playerState, setPlayerState] = useState(COMMON.PLAYER_CREATE);
+  const [area, setArea] = useState([]);
+  const [nextArea, setNextArea] = useState([]);
+
+  const [isRotate, setIsRotate] = useState(true);
 
   const playerInfo = {
     position: { ...position },
@@ -39,7 +38,7 @@ function usePlayer() {
     { x: 0, y: -1 },
   ];
 
-  function genBlock() {
+  const genBlock = () => {
     const block = [];
     const blockCount = 4;
 
@@ -61,9 +60,9 @@ function usePlayer() {
     block.shift();
 
     return block;
-  }
+  };
 
-  function calculateTranslateArea(input_x, input_y) {
+  const calculateTranslateArea = (input_x, input_y) => {
     const prevPosition = { ...position };
     const new_x = prevPosition.x + input_x;
     const new_y = prevPosition.y + input_y;
@@ -97,23 +96,34 @@ function usePlayer() {
     }
 
     return { result_x: prevPosition.x, result_y: prevPosition.y };
-  }
+  };
 
-  function updatePlayer(input_x, input_y) {
+  const updatePlayer = (input_x, input_y) => {
     playerInfo.position = position;
     playerInfo.area = area;
     playerInfo.playerState = playerState;
 
     if (COMMON.PLAYER_CREATE == playerState) {
+      setPlayerState(COMMON.PLAYER_MOVE_READY);
+
+      dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_MOVE_READY == playerState) {
       setPlayerState(COMMON.PLAYER_MOVE);
 
-      dispatch(updateGridFromPlayer(playerInfo));
+      // dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_ARRIVED === playerState) {
-      setPlayerState(COMMON.PLAYER_CREATE);
-      setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
-      setArea(genBlock());
+      setPlayerState(COMMON.PLAYER_ARRIVED_DONE);
+      setArea([]);
 
       dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_ARRIVED_DONE === playerState) {
+      setPlayerState(COMMON.PLAYER_CREATE);
+
+      setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
+      setArea(nextArea);
+      setNextArea(genBlock());
+
+      // dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {
       /* block disappear fx */
     } else if (COMMON.PLAYER_MOVE === playerState) {
@@ -126,9 +136,9 @@ function usePlayer() {
 
       dispatch(updateGridFromPlayer(playerInfo));
     }
-  }
+  };
 
-  function enableRotateArea(calArea) {
+  const enableRotateArea = (calArea) => {
     for (const site of calArea) {
       const calc_x = site.x + position.x;
       const calc_y = site.y + position.y;
@@ -142,9 +152,9 @@ function usePlayer() {
         return false;
     }
     return true;
-  }
+  };
 
-  function rotatePlayer() {
+  const rotatePlayer = () => {
     playerInfo.position = position;
     playerInfo.playerState = playerState;
 
@@ -163,9 +173,11 @@ function usePlayer() {
     } else playerInfo.area = area;
 
     dispatch(updateGridFromPlayer(playerInfo));
-  }
+  };
 
   const onkeydown = (e) => {
+    if (playerState !== COMMON.PLAYER_MOVE) return;
+
     switch (e.key) {
       case "ArrowLeft":
         updatePlayer(-1, 0);
@@ -198,7 +210,12 @@ function usePlayer() {
     };
   }, [position, area]);
 
-  return [position, setPosition];
-}
+  useEffect(() => {
+    setArea(genBlock());
+    setNextArea(genBlock());
+  }, []);
+
+  return [nextArea, setPosition];
+};
 
 export default usePlayer;

@@ -2,11 +2,9 @@ import "../CSS/ingame.css";
 
 import { useSelector } from "react-redux";
 import Cell from "./cell.js";
-import usePlayer from "../hooks/player.js";
 import COMMON from "../const.js";
 
 export function CellGrid() {
-  const [position, setPosition] = usePlayer();
   const grid = useSelector((state) => state.grid.value);
 
   function makeGrid() {
