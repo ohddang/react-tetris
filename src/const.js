@@ -13,9 +13,6 @@ export const START_Y = 19;
 export const MAP_WIDTH = 10;
 export const MAP_HEIGHT = 20;
 
-// 상대위치 변수명
-// export const RELATIVE_POSITION = [{1,0},{0,1},{-1,0},{0,-1}];
-
 const COMMON = {
   GRID_NONE,
   GRID_BLOCK,
