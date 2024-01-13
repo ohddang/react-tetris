@@ -56,10 +56,41 @@ const usePlayer = () => {
         }).length > 0
       )
         block.push({ x: x, y: y });
+
+      if (block.length === 3) {
+        if (
+          (block[0].x === block[1].x && block[0].x === block[2].x) ||
+          (block[0].y === block[1].y && block[0].y === block[2].y)
+        ) {
+          if (Math.random() > 0.5) break;
+        }
+      }
     }
     block.shift();
 
     return block;
+  };
+
+  const isPossibleRotate = (area) => {
+    if (!area) return true;
+
+    let min_x = Number.MAX_SAFE_INTEGER;
+    let max_x = Number.MIN_SAFE_INTEGER;
+    let min_y = Number.MAX_SAFE_INTEGER;
+    let max_y = Number.MIN_SAFE_INTEGER;
+
+    area.forEach((site) => {
+      min_x = Math.min(min_x, site.x);
+      max_x = Math.max(max_x, site.x);
+      min_y = Math.min(min_y, site.y);
+      max_y = Math.max(max_y, site.y);
+    });
+
+    const width = max_x - min_x;
+    const height = max_y - min_y;
+
+    if (width > 1 || height > 1) return true;
+    else return false;
   };
 
   const calculateTranslateArea = (input_x, input_y) => {
@@ -109,8 +140,6 @@ const usePlayer = () => {
       dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_MOVE_READY == playerState) {
       setPlayerState(COMMON.PLAYER_MOVE);
-
-      // dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_ARRIVED === playerState) {
       setPlayerState(COMMON.PLAYER_ARRIVED_DONE);
       setArea([]);
@@ -118,12 +147,12 @@ const usePlayer = () => {
       dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_ARRIVED_DONE === playerState) {
       setPlayerState(COMMON.PLAYER_CREATE);
-
       setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
-      setArea(nextArea);
-      setNextArea(genBlock());
 
-      // dispatch(updateGridFromPlayer(playerInfo));
+      setIsRotate(isPossibleRotate(nextArea));
+      setArea(nextArea);
+
+      setNextArea(genBlock());
     } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {
       /* block disappear fx */
     } else if (COMMON.PLAYER_MOVE === playerState) {
@@ -155,6 +184,8 @@ const usePlayer = () => {
   };
 
   const rotatePlayer = () => {
+    if (!isRotate) return;
+
     playerInfo.position = position;
     playerInfo.playerState = playerState;
 
@@ -215,7 +246,7 @@ const usePlayer = () => {
     setNextArea(genBlock());
   }, []);
 
-  return [nextArea, setPosition];
+  return nextArea;
 };
 
 export default usePlayer;
