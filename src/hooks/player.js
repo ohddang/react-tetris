@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { updateGridFromPlayer } from "../redux-toolkit/slice";
+import {
+  startTimer,
+  stopTimer,
+  updateGridFromPlayer,
+} from "../redux-toolkit/slice";
 import COMMON from "../const.js";
 
 const usePlayer = () => {
   const time = useSelector((state) => state.time.value);
+  const speed = useSelector((state) => state.time.speed);
+  const interval = useSelector((state) => state.time.interval);
   const grid = useSelector((state) => state.grid.value);
   const dispatch = useDispatch();
 
@@ -153,6 +159,15 @@ const usePlayer = () => {
       }
     } else if (COMMON.PLAYER_MOVE_READY == playerState) {
       setPlayerState(COMMON.PLAYER_MOVE);
+    } else if (COMMON.PLAYER_MOVE === playerState) {
+      const { result_x, result_y } = calculateTranslateArea(input_x, input_y);
+      if (input_y !== 0 && position.y === result_y) {
+        setPlayerState(COMMON.PLAYER_ARRIVED);
+      }
+      playerInfo.position = { x: result_x, y: result_y };
+      setPosition({ x: result_x, y: result_y });
+
+      dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_ARRIVED === playerState) {
       setPlayerState(COMMON.PLAYER_ARRIVED_DONE);
       setArea([]);
@@ -166,18 +181,12 @@ const usePlayer = () => {
       setArea(nextArea);
 
       setNextArea(genBlock());
-    } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {
-      /* block disappear fx */
-    } else if (COMMON.PLAYER_MOVE === playerState) {
-      const { result_x, result_y } = calculateTranslateArea(input_x, input_y);
-      if (input_y !== 0 && position.y === result_y) {
-        setPlayerState(COMMON.PLAYER_ARRIVED);
-      }
-      playerInfo.position = { x: result_x, y: result_y };
-      setPosition({ x: result_x, y: result_y });
 
       dispatch(updateGridFromPlayer(playerInfo));
+    } else if (COMMON.PLAYER_WAIT_EFFECT === playerState) {
+      /* block disappear fx */
     } else if (COMMON.PLAYER_DIE === playerState) {
+      dispatch(stopTimer());
       console.log("game over");
     } else if (COMMON.PLAYER_RESTART === playerState) {
       setPlayerState(COMMON.PLAYER_CREATE);
@@ -185,6 +194,7 @@ const usePlayer = () => {
       setArea(genBlock());
       setNextArea(genBlock());
 
+      dispatch(startTimer());
       dispatch(updateGridFromPlayer(playerInfo));
     }
   };
@@ -229,7 +239,6 @@ const usePlayer = () => {
   };
 
   const onkeydown = (e) => {
-    console.log(e.key + " " + playerState);
     if (playerState !== COMMON.PLAYER_MOVE && playerState !== COMMON.PLAYER_DIE)
       return;
 
@@ -256,7 +265,8 @@ const usePlayer = () => {
 
   useEffect(() => {
     if (playerState === COMMON.PLAYER_MOVE) {
-      updatePlayer(0, -1);
+      // console.log(time, speed);
+      if (time > speed - interval) updatePlayer(0, -1);
     } else {
       updatePlayer(0, 0);
     }

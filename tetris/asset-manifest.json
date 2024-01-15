@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/react-tetris/tetris/static/css/main.704e12cc.css",
-    "main.js": "/react-tetris/tetris/static/js/main.36581fb1.js",
+    "main.css": "/react-tetris/tetris/static/css/main.f5d32a6a.css",
+    "main.js": "/react-tetris/tetris/static/js/main.9ca51b1f.js",
+    "static/media/board.png": "/react-tetris/tetris/static/media/board.3b1efa372bf96928fc46.png",
+    "static/media/none.png": "/react-tetris/tetris/static/media/none.af3345a9c90e3bf44a02.png",
     "index.html": "/react-tetris/tetris/index.html",
-    "main.704e12cc.css.map": "/react-tetris/tetris/static/css/main.704e12cc.css.map",
-    "main.36581fb1.js.map": "/react-tetris/tetris/static/js/main.36581fb1.js.map"
+    "main.f5d32a6a.css.map": "/react-tetris/tetris/static/css/main.f5d32a6a.css.map",
+    "main.9ca51b1f.js.map": "/react-tetris/tetris/static/js/main.9ca51b1f.js.map"
   },
   "entrypoints": [
-    "static/css/main.704e12cc.css",
-    "static/js/main.36581fb1.js"
+    "static/css/main.f5d32a6a.css",
+    "static/js/main.9ca51b1f.js"
   ]
 }
