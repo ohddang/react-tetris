@@ -179,6 +179,13 @@ const usePlayer = () => {
       dispatch(updateGridFromPlayer(playerInfo));
     } else if (COMMON.PLAYER_DIE === playerState) {
       console.log("game over");
+    } else if (COMMON.PLAYER_RESTART === playerState) {
+      setPlayerState(COMMON.PLAYER_CREATE);
+      setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
+      setArea(genBlock());
+      setNextArea(genBlock());
+
+      dispatch(updateGridFromPlayer(playerInfo));
     }
   };
 
@@ -222,7 +229,9 @@ const usePlayer = () => {
   };
 
   const onkeydown = (e) => {
-    if (playerState !== COMMON.PLAYER_MOVE) return;
+    console.log(e.key + " " + playerState);
+    if (playerState !== COMMON.PLAYER_MOVE && playerState !== COMMON.PLAYER_DIE)
+      return;
 
     switch (e.key) {
       case "ArrowLeft":
@@ -237,6 +246,11 @@ const usePlayer = () => {
       case "ArrowDown":
         updatePlayer(0, -1);
         break;
+      case "Enter":
+        if (playerState === COMMON.PLAYER_DIE) {
+          setPlayerState(COMMON.PLAYER_RESTART);
+        }
+        break;
     }
   };
 
@@ -244,7 +258,7 @@ const usePlayer = () => {
     if (playerState === COMMON.PLAYER_MOVE) {
       updatePlayer(0, -1);
     } else {
-      if (playerState !== COMMON.PLAYER_DIE) updatePlayer(0, 0);
+      updatePlayer(0, 0);
     }
   }, [time, playerState]);
 
@@ -254,7 +268,7 @@ const usePlayer = () => {
     return () => {
       window.removeEventListener("keydown", onkeydown);
     };
-  }, [position, area]);
+  }, [position, area, playerState]);
 
   useEffect(() => {
     setArea(genBlock());

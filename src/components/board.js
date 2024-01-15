@@ -15,9 +15,6 @@ const Board = () => {
   return (
     <div className="board">
       <div className="game_board">
-        {COMMON.PLAYER_DIE === playerState && (
-          <div className="game_msg">Game Over</div>
-        )}
         <div className="game_screen">
           <CellGrid />
           <div className="game_info">
@@ -61,6 +58,12 @@ const Board = () => {
               </div>
             </section>
           </div>
+          {COMMON.PLAYER_DIE === playerState && (
+            <div className="game_msg">
+              <p>Game Over</p>
+              <p>Press Enter to Restart</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

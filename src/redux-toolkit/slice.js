@@ -75,6 +75,13 @@ export const gridSlice = createSlice({
             })
           );
           break;
+        case COMMON.PLAYER_RESTART:
+          state.value = [...state.value].map((row, x) =>
+            [...row].map(() => {
+              return COMMON.GRID_NONE;
+            })
+          );
+          break;
       }
     },
   },
