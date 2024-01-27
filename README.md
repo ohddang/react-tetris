@@ -25,11 +25,11 @@
 <br/>
 
 ## 🎮 배포 주소
-><a href="https://ohddang.github.io/react-tetris/tetris/">바로가기</a>  
+><a href="https://ohddang.github.io/react-tetris/tetris/" target="_blank">테트리스 바로가기</a>  
 >🕹 ⬅⬇➡ 블럭이동    ⬆ 회전  
 <br/>
 
 ## 📝 Blog
->https://nth-challenge.tistory.com/category/React%EB%A1%9C%20%ED%85%8C%ED%8A%B8%EB%A6%AC%EC%8A%A4  
+><a href="https://nth-challenge.tistory.com/category/React%EB%A1%9C%20%ED%85%8C%ED%8A%B8%EB%A6%AC%EC%8A%A4" target="_blank">블로그 바로가기</a>  
 <br/>
 
