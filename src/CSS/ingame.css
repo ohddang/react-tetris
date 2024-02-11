@@ -51,7 +51,7 @@
   height: min(43vw, 430px);
   background-color: #9caa84;
 
-  box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0px 0px 3px 0px rgba(0, 0, 0, 0.75);
 
   gap: 5px;
 }
@@ -63,7 +63,7 @@
   width: min(28vw, 280px);
 
   font-family: "Silkscreen", sans-serif;
-  font-size: clamp(1.2rem, 4vw, 2rem);
+  font-size: clamp(0.6rem, 4vw, 2rem);
   text-align: center;
 
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
@@ -77,7 +77,7 @@
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(20, 1fr);
 
-  margin: 5px 5px 5px 5px;
+  /* margin: 5px 5px 5px 5px; */
   padding: 0px;
   outline: 1px solid black;
 }
@@ -94,6 +94,7 @@
   font-size: 1.2rem;
 
   background-color: #9caa84;
+  /* padding-right: 5px; */
 }
 
 .game_info > * {
