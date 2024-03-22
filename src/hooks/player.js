@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  startTimer,
-  stopTimer,
-  updateGridFromPlayer,
-} from "../redux-toolkit/slice";
+import { startTimer, stopTimer, updateGridFromPlayer } from "../redux-toolkit/slice";
 import COMMON from "../const.js";
 
 const usePlayer = () => {
@@ -51,8 +47,7 @@ const usePlayer = () => {
       const x = Math.floor(Math.random() * 3) - 1;
       const y = Math.floor(Math.random() * 3) - 1;
 
-      if (undefined != block.find((site) => site.x === x && site.y === y))
-        continue;
+      if (undefined != block.find((site) => site.x === x && site.y === y)) continue;
 
       if (
         block.filter((site) => {
@@ -120,11 +115,7 @@ const usePlayer = () => {
         const calc_x = site.x + new_x;
         const calc_y = site.y + new_y;
 
-        if (
-          calc_x < 0 ||
-          calc_x > COMMON.MAP_WIDTH - 1 ||
-          COMMON.GRID_BLOCK === grid[calc_x][calc_y]
-        )
+        if (calc_x < 0 || calc_x > COMMON.MAP_WIDTH - 1 || COMMON.GRID_BLOCK === grid[calc_x][calc_y])
           return { result_x: prevPosition.x, result_y: prevPosition.y };
       }
       return { result_x: new_x, result_y: new_y };
@@ -133,8 +124,7 @@ const usePlayer = () => {
         const calc_x = site.x + new_x;
         const calc_y = site.y + new_y;
 
-        if (calc_y > COMMON.MAP_HEIGHT - 1)
-          return { result_x: new_x, result_y: new_y };
+        if (calc_y > COMMON.MAP_HEIGHT - 1) return { result_x: new_x, result_y: new_y };
 
         if (calc_y < 0 || COMMON.GRID_BLOCK === grid[calc_x][calc_y])
           return { result_x: prevPosition.x, result_y: prevPosition.y };
@@ -187,7 +177,6 @@ const usePlayer = () => {
       /* block disappear fx */
     } else if (COMMON.PLAYER_DIE === playerState) {
       dispatch(stopTimer());
-      console.log("game over");
     } else if (COMMON.PLAYER_RESTART === playerState) {
       setPlayerState(COMMON.PLAYER_CREATE);
       setPosition({ x: COMMON.START_X, y: COMMON.START_Y });
@@ -204,12 +193,7 @@ const usePlayer = () => {
       const calc_x = site.x + position.x;
       const calc_y = site.y + position.y;
 
-      if (
-        calc_x < 0 ||
-        calc_x > COMMON.MAP_WIDTH - 1 ||
-        calc_y < 0 ||
-        COMMON.GRID_BLOCK === grid[calc_x][calc_y]
-      )
+      if (calc_x < 0 || calc_x > COMMON.MAP_WIDTH - 1 || calc_y < 0 || COMMON.GRID_BLOCK === grid[calc_x][calc_y])
         return false;
     }
     return true;
@@ -239,8 +223,7 @@ const usePlayer = () => {
   };
 
   const onkeydown = (e) => {
-    if (playerState !== COMMON.PLAYER_MOVE && playerState !== COMMON.PLAYER_DIE)
-      return;
+    if (playerState !== COMMON.PLAYER_MOVE && playerState !== COMMON.PLAYER_DIE) return;
 
     switch (e.key) {
       case "ArrowLeft":
@@ -265,7 +248,6 @@ const usePlayer = () => {
 
   useEffect(() => {
     if (playerState === COMMON.PLAYER_MOVE) {
-      // console.log(time, speed);
       if (time > speed - interval) updatePlayer(0, -1);
     } else {
       updatePlayer(0, 0);

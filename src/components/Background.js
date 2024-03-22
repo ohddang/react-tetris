@@ -18,7 +18,7 @@ const Background = () => {
         el.className = "background_image";
 
         const theta = Math.floor(Math.random() * 3) - 1;
-        console.log(theta);
+
         el.style.top = `${top + theta}%`;
         el.style.left = `${left + theta}%`;
         el.style.transform = `rotate(${rotate}deg)`;
@@ -26,7 +26,6 @@ const Background = () => {
         images.push(el);
       }
     }
-    console.log(images.length);
 
     for (const image of images) {
       background.current.appendChild(image);
